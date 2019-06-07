@@ -1,9 +1,9 @@
 package adabot.sample
 
-import adabot.BaseSpec
+import adabot.BaseMicronautTest
 import io.micronaut.http.HttpRequest
 
-class HelloControllerSpec extends BaseSpec {
+class HelloControllerSpec extends BaseMicronautTest {
     def "call hello - direct"(){
         given:
             def get = HttpRequest.GET("/sample/hello")

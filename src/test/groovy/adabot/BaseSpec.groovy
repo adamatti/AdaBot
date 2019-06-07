@@ -1,19 +1,21 @@
 package adabot
 
+import adabot.core.ConfigHelper
 import io.micronaut.context.ApplicationContext
-import io.micronaut.http.client.RxHttpClient
-import io.micronaut.http.client.annotation.Client
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.runtime.server.EmbeddedServer
+import spock.lang.AutoCleanup
+import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.inject.Inject
-
-@MicronautTest
 abstract class BaseSpec extends Specification {
-    @Inject
-    protected ApplicationContext context
+    @Shared
+    @AutoCleanup
+    protected EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer.class)
 
-    @Inject
-    @Client('/')
-    protected RxHttpClient client
+    @Shared
+    protected ApplicationContext context = embeddedServer.getApplicationContext()
+
+    @Shared
+    protected ConfigHelper configHelper = context.getBean(ConfigHelper.class)
+
 }

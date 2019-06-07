@@ -27,6 +27,13 @@ configurations {
 }
 
 dependencies {
+    compile "io.github.cdimascio:java-dotenv:3.0.0"
+
+    // Redis
+    compile 'io.micronaut.configuration:micronaut-redis-lettuce'
+    //testCompile "com.github.kstyrc:embedded-redis:0.6"
+
+    // Micronaut dependencies
     compile "io.micronaut:micronaut-http-client"
     //compile "io.micronaut.configuration:micronaut-mongo-reactive"
     compile "io.micronaut:micronaut-http-server-netty"
@@ -34,7 +41,9 @@ dependencies {
     compile "io.micronaut:micronaut-validation"
     compile "javax.annotation:javax.annotation-api"
     compileOnly "io.micronaut:micronaut-inject-groovy"
+
     runtime "ch.qos.logback:logback-classic:1.2.3"
+
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "org.junit.jupiter:junit-jupiter-api"
     testCompile "io.micronaut.test:micronaut-test-junit5"
