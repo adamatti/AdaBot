@@ -5,6 +5,14 @@ clean-ide:
 	@rm -rf bin
 	@rm -rf .classpath
 	@rm -rf .project
+	@rm -rf build
+	@rm -rf out
+
+docker-up:
+	docker-compose up -d
+
+docker-stop:
+	docker-compose stop -t 0
 
 .PHONY: help
 help: ## show this help
