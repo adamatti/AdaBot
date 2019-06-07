@@ -22,5 +22,6 @@ class ConfigHelper {
 }
 
 enum EnvVars {
-    TELEGRAM_TOKEN
+    TELEGRAM_TOKEN,
+    DASHBOT_TOKEN
 }
