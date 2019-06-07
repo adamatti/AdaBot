@@ -1,7 +1,7 @@
 ---
 micronaut:
   application:
-    name: adabot2019
+    name: adabot
 
 ---
 redis:
