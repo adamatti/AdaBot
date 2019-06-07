@@ -1,11 +1,19 @@
 ---
 micronaut:
-  application:
-    name: adabot
+    application:
+        name: adabot
+    http:
+        client:
+            logger-name: "http-client"
+            read-timeout: 5s
+            read-idle-timeout: 5s
+            connect-timeout: 5s
+    server:
+        port: 8080
 
 ---
 redis:
-    uri: "redis://${REDIS_HOST:localhost}:${REDIS_PORT: 6379}"
+    uri: "redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}"
     ssl: true
     timeout: 30s
 

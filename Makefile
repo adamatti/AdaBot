@@ -14,6 +14,9 @@ docker-up:
 docker-stop:
 	docker-compose stop -t 0
 
+compile: clean-ide
+	./gradlew classes --stacktrace
+
 .PHONY: help
 help: ## show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

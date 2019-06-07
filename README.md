@@ -5,6 +5,9 @@ Pet project to create a bot
 * Micronaut
     * Created with `mn create-app adabot-2019 --features=mongo-reactive,groovy`
 
+#### known issues / technical debts
+
+* still high couple with telegram. Must change it when implement a second channel
 
 #### Todo
 

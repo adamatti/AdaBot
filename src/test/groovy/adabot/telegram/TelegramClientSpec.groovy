@@ -14,20 +14,19 @@ class TelegramClientSpec extends BaseSpec {
 
     def "get messages"(){
         when:
-            def response = telegramClient.getUpdates(token)
+            def response = telegramClient.getUpdates(token).blockingGet()
             println response
         then:
-             response.ok == true
-            response.result.first().updateId != null
+            response.ok
     }
 
     def "send message"(){
         given:
             def msg = new OutgoingTextMessage(chatId: 150736777, text: "msg")
         when:
-            def response = telegramClient.sendMessage(token, msg)
+            def response = telegramClient.sendMessage(token, msg).blockingGet()
             println response
         then:
-            response.ok == true
+            response.ok
     }
 }

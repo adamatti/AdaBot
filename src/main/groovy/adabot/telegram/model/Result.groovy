@@ -8,4 +8,14 @@ import groovy.transform.ToString
 class Result<T> {
     boolean ok
     T result
+
+    Result(){
+
+    }
+
+    Result(boolean ok, T result){
+        this.ok = ok
+        this.result = result
+    }
+
 }
