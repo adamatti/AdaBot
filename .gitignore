@@ -1,9 +1,11 @@
-Thumbs.db
-.DS_Store
-.gradle
 build/
 target/
 out/
+bin/
+
+Thumbs.db
+.DS_Store
+.gradle
 .idea
 *.iml
 *.ipr

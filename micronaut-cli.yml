@@ -1,5 +1,5 @@
 profile: service
-defaultPackage: adabot2019
+defaultPackage: adabot
 ---
 testFramework: spock
 sourceLanguage: groovy
