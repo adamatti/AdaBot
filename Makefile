@@ -14,6 +14,8 @@ docker-up:
 docker-stop:
 	docker-compose stop -t 0
 
+docker-restart: docker-stop docker-up
+
 compile: clean-ide ## compile project
 	./gradlew classes --stacktrace
 

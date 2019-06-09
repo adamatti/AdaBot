@@ -1,10 +1,13 @@
 package adabot.bot
 
+import adabot.bot.model.BotSession
 import adabot.core.ConfigHelper
 import adabot.core.EventEmitter
 import adabot.core.Events
+import adabot.core.extensions.AsyncExtension
 import adabot.dialogflow.DialogFlowSdkRepo
 import adabot.telegram.model.Message
+import com.mongodb.reactivestreams.client.Success
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.discovery.event.ServiceStartedEvent
 import io.micronaut.scheduling.annotation.Async
@@ -31,6 +34,10 @@ class BotService implements ApplicationEventListener<ServiceStartedEvent>{
     @Inject
     private DialogFlowSdkRepo dialogFlowSdkRepo
 
+    @Inject
+    private SessionService sessionService
+
+
     @Async
     @Override
     void onApplicationEvent(ServiceStartedEvent event) {
@@ -42,8 +49,8 @@ class BotService implements ApplicationEventListener<ServiceStartedEvent>{
     }
 
     protected void handle(Map headers, Update update){
-        def sessionId = UUID.randomUUID().toString() // FIXME reuse session ID, do not create new
-        def dialogFlowResponse = dialogFlowSdkRepo.query(update.message.text,sessionId)
+        def session = sessionService.findOrCreateSession(update)
+        def dialogFlowResponse = dialogFlowSdkRepo.query(update.message.text,session.sessionId)
         def response = replyTo(update.message)
 
         def newHeaderVars = [

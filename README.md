@@ -19,7 +19,6 @@ Pet project to create a bot
 * pause function
 * Infra
     * Telegram: use webhook
-    * Mongo
     * Schedule jobs
 * Core: Create a BPM engine
 * Business cases

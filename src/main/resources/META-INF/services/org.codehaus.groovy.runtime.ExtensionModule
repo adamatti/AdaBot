@@ -1,0 +1,5 @@
+# http://mrhaki.blogspot.com/2013/01/groovy-goodness-adding-extra-methods.html
+moduleName = adabot-module
+moduleVersion = 1.0
+extensionClasses=\
+  adabot.core.extensions.AsyncExtension
