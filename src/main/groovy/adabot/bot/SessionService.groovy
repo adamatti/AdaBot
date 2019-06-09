@@ -1,8 +1,10 @@
 package adabot.bot
 
+import static adabot.core.MapHelper.merge
+import static adabot.core.MapHelper.removeNulls
+import static adabot.core.extensions.AsyncExtension.blockingIterable
 import adabot.bot.model.BotSession
 import adabot.bot.repo.SessionRepo
-import adabot.core.extensions.AsyncExtension
 import adabot.telegram.model.Update
 import com.mongodb.reactivestreams.client.Success
 import groovy.transform.CompileStatic
@@ -27,21 +29,32 @@ class SessionService {
 
         if (entity) {
             log.info("Found existing session")
-            // FIXME update variables?
-            return entity
+            return updateVariables(entity,update)
         }
 
         createSession(update)
+    }
+
+    private BotSession updateVariables(BotSession entity, Update update){
+        entity.variables = merge(entity.variables, extractVariables(update))
+        sessionRepo.updateOne(
+            [_id: entity.sessionId],
+            [variables: entity.variables]
+        )
+        entity
     }
 
     private BotSession createSession(Update update){
         def entity = new BotSession(
             sessionId: UUID.randomUUID().toString(),
             createDate: new Date(),
-            variables:extractVariables(update)
+            variables: merge(
+                initialVariables(update) ,
+                extractVariables(update)
+            )
         )
 
-        AsyncExtension.blockingIterable(sessionRepo.insertOne(entity)).each { Success it ->
+        blockingIterable(sessionRepo.insertOne(entity)).each { Success it ->
             log.info("InsertOne result: ${it.toString()}")
         }
 
@@ -49,11 +62,22 @@ class SessionService {
         entity
     }
 
-    private Map extractVariables(Update update){
+
+    private Map initialVariables(Update update){
         [
-            telegramChatId: update.message.chat.id
-            //FIXME save other telegram variables (e.g. first/last name, username)
+            pause: false
         ]
+    }
+
+    private Map extractVariables(Update update){
+        def user = update?.message?.from
+
+        removeNulls([
+            telegramChatId: update?.message?.chat?.id,
+            telegramUserName: user?.username,
+            firstName: user?.firstName,
+            lastName: user?.lastName
+        ])
     }
 
 }

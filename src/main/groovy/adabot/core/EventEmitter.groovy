@@ -19,14 +19,14 @@ import static groovyx.gpars.GParsPool.withPool
 @Singleton
 @CompileStatic
 class EventEmitter {
-    private final Map<Events,List<Closure>> listenners = [:]
+    private final Map<Events,List<Closure>> listenners = [:].asSynchronized()
 
-    void on(Events eventName,Closure func){
+    synchronized void on(Events eventName,Closure func){
         if (!listenners[eventName]) {
             listenners[eventName] = []
         }
         listenners[eventName].add(func)
-        log.info("Handler registered[event: ${eventName}, owner: ${func.owner}]")
+        log.debug("Handler registered[event: ${eventName}, owner: ${func.owner}]")
     }
 
     @Async

@@ -1,5 +1,6 @@
 package adabot.dashbot
 
+import adabot.bot.model.BotSession
 import adabot.core.ConfigHelper
 import adabot.core.EnvVars
 import adabot.core.EventEmitter
@@ -67,11 +68,16 @@ class DashbotService implements ApplicationEventListener<ServiceStartedEvent> {
         def message = update.message
         //def user = update.message.from
         def chat = update.message.chat
+        def session = headers?.SESSION as BotSession
 
         def request = new DashbotRequest(
             text: message.text,
             intent: new Intent(name: (headers?.INTENT as String ?: "Unknown")),
-            userId: chat.id.toString()
+            userId: chat.id.toString(),
+            platformUserJson: [
+                firstName: session?.variables?.firstName,
+                lastName: session?.variables?.lastName
+            ]
         )
         track("incoming",request)
     }

@@ -35,7 +35,7 @@ class DialogFlowSdkRepo implements ApplicationEventListener<ServiceStartedEvent>
     @Override
     void onApplicationEvent(ServiceStartedEvent event) {
         sessionsClient = buildSessionClient()
-        log.info("Session created")
+        log.debug("Session created")
     }
 
     QueryResult query(String text, String sessionId){

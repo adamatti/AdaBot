@@ -12,19 +12,25 @@ Pet project to create a bot
 #### Todo
 
 * deploy to heroku
-* enable / disable dialog flow
-* handover
-* webchat
-* generic bot messages (stop using telegram ones)
-* pause function
-* Infra
-    * Telegram: use webhook
-    * Schedule jobs
+* generic bot messages(classes) - stop using telegram ones
 * Core: Create a BPM engine
 * Business cases
     * HR interview
     * Jokes (e.q. máquina)
-         
+    
+#### Todo Low
+
+* track time (from user to answer)
+* influx? newrelic?
+* enable / disable dialog flow
+* admin ui
+    * handover
+    * pause function: enable UI
+* webchat
+* Infra
+    * Telegram: use webhook
+    * Schedule jobs
+
 #### References
 
 * [Telegram API](https://core.telegram.org/bots/api) / [Apache camel mapping](https://github.com/apache/camel/blob/master/components/camel-telegram/src/main/java/org/apache/camel/component/telegram/service/RestBotAPI.java)

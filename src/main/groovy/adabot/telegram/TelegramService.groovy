@@ -44,7 +44,7 @@ class TelegramService implements ApplicationEventListener<ServiceStartedEvent> {
         def telegramResult = getUpdates()
 
         if (telegramResult.ok && telegramResult.result){
-            log.info("Updates received: ${telegramResult.result.size()}")
+            log.debug("Updates received: ${telegramResult.result.size()}")
             emitUpdates(telegramResult.result)
             updateOffset(telegramResult.result)
         } else if (!telegramResult.ok){
@@ -89,7 +89,10 @@ class TelegramService implements ApplicationEventListener<ServiceStartedEvent> {
 
     private void emitUpdates(List<Update> updates){
         updates.each { Update update ->
-            eventEmitter.emit(Events.TELEGRAM_MSG_RECEIVED, update)
+            eventEmitter.emit(
+                Events.TELEGRAM_MSG_RECEIVED,
+                update
+            )
         }
     }
 }

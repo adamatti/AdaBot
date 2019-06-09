@@ -5,8 +5,10 @@ import adabot.core.ConfigHelper
 import adabot.core.EventEmitter
 import adabot.core.Events
 import adabot.core.extensions.AsyncExtension
+import adabot.dashbot.model.Intent
 import adabot.dialogflow.DialogFlowSdkRepo
 import adabot.telegram.model.Message
+import com.google.cloud.dialogflow.v2beta1.QueryResult
 import com.mongodb.reactivestreams.client.Success
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.discovery.event.ServiceStartedEvent
@@ -37,7 +39,6 @@ class BotService implements ApplicationEventListener<ServiceStartedEvent>{
     @Inject
     private SessionService sessionService
 
-
     @Async
     @Override
     void onApplicationEvent(ServiceStartedEvent event) {
@@ -50,10 +51,18 @@ class BotService implements ApplicationEventListener<ServiceStartedEvent>{
 
     protected void handle(Map headers, Update update){
         def session = sessionService.findOrCreateSession(update)
+
+        if (session.variables.pause){
+            log.info("Talk paused [session: ${session.sessionId}]")
+            return
+        }
+
         def dialogFlowResponse = dialogFlowSdkRepo.query(update.message.text,session.sessionId)
-        def response = replyTo(update.message)
+
+        def response = replyTo(update.message,dialogFlowResponse)
 
         def newHeaderVars = [
+            SESSION: session,
             USER_MESSAGE: update,
             DIALOGFLOW_RESPONSE: dialogFlowResponse,
             INTENT: dialogFlowResponse?.intent?.displayName
@@ -66,11 +75,13 @@ class BotService implements ApplicationEventListener<ServiceStartedEvent>{
         )
     }
 
-    protected OutgoingTextMessage replyTo(Message message){
+    protected OutgoingTextMessage replyTo(Message message, QueryResult dialogFlowResponse){
         def user = message.from
         def chat = message.chat
 
-        def responseText = "Olá ${user.firstName}. Msg recebida: ${message.text}"
-        new OutgoingTextMessage(chatId: chat.id, text: responseText)
+        new OutgoingTextMessage(
+            chatId: chat.id,
+            text: dialogFlowResponse.fulfillmentText
+        )
     }
 }
