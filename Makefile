@@ -14,8 +14,14 @@ docker-up:
 docker-stop:
 	docker-compose stop -t 0
 
-compile: clean-ide
+compile: clean-ide ## compile project
 	./gradlew classes --stacktrace
+
+assemble: clean-ide ## pack to run
+	./gradlew assemble
+
+run:
+	@java -Xms64m -jar build/libs/adabot-0.1.jar
 
 .PHONY: help
 help: ## show this help

@@ -4,8 +4,12 @@ import adabot.telegram.model.OutgoingTextMessage
 import adabot.telegram.model.Update
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import groovyx.gpars.GParsPoolUtil
+import io.micronaut.scheduling.annotation.Async
 
 import javax.inject.Singleton
+
+import static groovyx.gpars.GParsPool.withPool
 
 /**
  * Class to decouple call between modules.
@@ -25,7 +29,13 @@ class EventEmitter {
         log.info("Handler registered[event: ${eventName}, owner: ${func.owner}]")
     }
 
+    @Async
     void emit(Events eventName, Object event){
+        emit(eventName,[:],event)
+    }
+
+    @Async
+    void emit(Events eventName, Map headers, Object event){
         log.info("Msg received: ${event}")
 
         if (!listenners[eventName]){
@@ -33,9 +43,14 @@ class EventEmitter {
             return
         }
 
-        // TODO make it parallel? (e.g. gpars)
-        listenners[eventName].each { Closure func ->
-            func.call(event)
+        withPool {
+            GParsPoolUtil.eachParallel(listenners[eventName]) { Closure func ->
+                if (func.parameterTypes.length == 1) {
+                    func.call(event)
+                } else {
+                    func.call(headers,event)
+                }
+            }
         }
     }
 }

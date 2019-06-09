@@ -28,6 +28,8 @@ configurations {
 
 dependencies {
     compile "io.github.cdimascio:java-dotenv:3.0.0"
+    compile group: 'com.google.cloud', name: 'google-cloud-dialogflow', version: '0.95.0-alpha'
+    compile group: 'org.codehaus.gpars', name: 'gpars', version: '1.2.1'
 
     // Redis
     compile 'io.micronaut.configuration:micronaut-redis-lettuce'
